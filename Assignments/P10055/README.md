@@ -9,9 +9,12 @@ For each line of input, print the difference of the number of soldiers between H
 opponent’s army. Each output should be in a separate line.
 
 ### Ssmple Output
+```
 10 12
 10 14
 100 200
+```
+
 
 ### Files
 
