@@ -8,13 +8,18 @@ in two separate lines.
 For each test case you are to print one line of output – the serial number of the test case followed by
 the summation of the odd integers in the range [a, b].
 
-### Ssmple Output
+### Sample Input
 ```
 2
 1
 5
 3
 5
+```
+### Sample Output
+```
+Case 1: 9
+Case 2: 8
 ```
 
 
