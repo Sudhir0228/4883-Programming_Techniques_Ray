@@ -8,11 +8,17 @@ than 2<sup>32</sup>. Input is terminated by ‘End of File’.
 For each line of input, print the difference of the number of soldiers between Hashmat’s army and his
 opponent’s army. Each output should be in a separate line.
 
-### Ssmple Output
+### Sample Input
 ```
 10 12
 10 14
 100 200
+```
+### Sample Output
+```
+2
+4
+100
 ```
 
 
