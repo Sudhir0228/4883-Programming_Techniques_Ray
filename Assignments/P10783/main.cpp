@@ -1,3 +1,8 @@
+/**
+ * Name: Sudhir Ray
+ * Course: 4883-Programming_Techniques
+ * Date: 09/07/2024
+ */
 #include <iostream>
 
 using namespace std;
