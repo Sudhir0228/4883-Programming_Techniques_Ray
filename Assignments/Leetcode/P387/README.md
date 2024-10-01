@@ -25,7 +25,7 @@ Input: s = "aabb"
 
 Output: -1
 
-###Constraints:
+### Constraints:
 
 1 <= s.length <= 105
 s consists of only lowercase English letters.
