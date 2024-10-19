@@ -24,5 +24,9 @@ Explanation: We return false because 3.742 * 3.742 = 14 and 3.742 is not an inte
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/P387)     | PDF file of the problem.          |
+|  1  | [367](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P367/P367)     | PDF file of the problem.          |
+|  2  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P367/main.py)     | Solution of the problem.          |
+|  3  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P367/TestCase)     | Test Case of the problem.          |
+
+
 
