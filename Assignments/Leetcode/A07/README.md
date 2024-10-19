@@ -25,8 +25,8 @@ Output: 4
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
 |  0  | [P215](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A07/P215)     | PDF file of the problem.          |
-|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P215/main.py)     | Solution file of the problem.          |
-|  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P215/TestCase)     | Test Cases of the Problem with expected Output          |
+|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A07/main.py)     | Solution file of the problem.          |
+|  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A07/TestCase)     | Test Cases of the Problem with expected Output          |
 
 
 
