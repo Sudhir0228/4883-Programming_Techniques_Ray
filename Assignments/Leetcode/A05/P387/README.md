@@ -35,8 +35,8 @@ s consists of only lowercase English letters.
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/P387)     | PDF file of the problem.          |
-|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/main.py)     | Solution file of the problem.          |
+|  0  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/P387)     | PDF file of the problem.          |
+|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/main.py)     | Solution file of the problem.          |
 |  2  | [in1](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in1)     | File containing the sample problem in the pdf file.          |
 |  3  | [in2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in2)     | File containing larger test case.         |
 |  4  | [in3](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in3)     | File containing input of the third test case.         |
