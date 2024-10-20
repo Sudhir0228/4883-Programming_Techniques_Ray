@@ -35,13 +35,9 @@ s consists of only lowercase English letters.
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/P387)     | PDF file of the problem.          |
-|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/main.py)     | Solution file of the problem.          |
-|  2  | [in1](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in1)     | File containing the sample problem in the pdf file.          |
-|  3  | [in2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in2)     | File containing larger test case.         |
-|  4  | [in3](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/in3)     | File containing input of the third test case.         |
-|  5  | [out1](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/out1)     | File with output of the first test case.         |
-|  6  | [out2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/out2)     | File containing output of the second test case.         |
-|  7  | [out3](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/P387/out3)     | File containing output of the third test case.         |
+|  1  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/P387)     | PDF file of the problem.          |
+|  2  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/main.py)     | Solution file of the problem.          |
+|  3  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/TestCase)     | Test Case of the problem.          |
+
 
 
