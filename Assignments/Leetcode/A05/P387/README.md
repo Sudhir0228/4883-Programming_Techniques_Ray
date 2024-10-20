@@ -35,7 +35,7 @@ s consists of only lowercase English letters.
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  1  | [387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/P387)     | PDF file of the problem.          |
+|  1  | [P387](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/P387)     | PDF file of the problem.          |
 |  2  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/main.py)     | Solution file of the problem.          |
 |  3  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P387/TestCase)     | Test Case of the problem.          |
 
