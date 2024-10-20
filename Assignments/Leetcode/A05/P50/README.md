@@ -30,7 +30,7 @@ Either x is not zero or n > 0.
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
 |  0  | [P50](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P50/P50)     | PDF file of the problem.          |
-|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P50main.py)     | Solution file of the problem.          |
+|  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P50/main.py)     | Solution file of the problem.          |
 |  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P50/TestCase)     | Test Cases of the Problem with expected Output          |
 
 
