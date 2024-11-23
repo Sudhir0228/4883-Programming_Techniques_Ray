@@ -23,7 +23,7 @@ Each string does not contain leading zeros except for the zero itself.
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [P67](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P67)     | PDF file of the problem.          |
+|  0  | [P67](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P67/P67)     | PDF file of the problem.          |
 |  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P67/main.py)     | Solution file of the problem.          |
 |  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P67/TestCase)     | Test Case for the problem          |
 
