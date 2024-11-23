@@ -37,7 +37,7 @@ Output: 12
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [P1342](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P342/P1342)     | PDF file of the problem.          |
+|  0  | [P1342](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P1342/P1342)     | PDF file of the problem.          |
 |  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P1342/main.py)     | Solution file of the problem.          |
 |  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P1342/TestCase)     | Test Cases of the Problem with expected Output          |
 
