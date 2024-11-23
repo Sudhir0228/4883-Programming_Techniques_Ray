@@ -28,7 +28,7 @@ It is guaranteed that the list represents a number that does not have leading ze
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [P2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P2)     | PDF file of the problem.          |
+|  0  | [P2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P2/P2)     | PDF file of the problem.          |
 |  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P2/main.py)     | Solution file of the problem.          |
 |  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P2/TestCase)     | Test Case for the problem          |
 
