@@ -43,7 +43,7 @@ The input binary string 1111111111111111111111111111101 has a total of thirty se
 
 |  #  | File Link | Assignment Description |
 | :-: | ----------- | ---------------------- |
-|  0  | [P191](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P191)     | PDF file of the problem.          |
+|  0  | [P191](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P191/P191)     | PDF file of the problem.          |
 |  1  | [main.py](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P191/main.py)     | Solution file of the problem.          |
 |  2  | [TestCase](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/blob/main/Assignments/Leetcode/A05/P191/TestCase)     | Test Case for the problem          |
 
