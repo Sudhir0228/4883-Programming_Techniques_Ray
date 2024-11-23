@@ -9,6 +9,9 @@
 |  5    | [P191](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P191)| Problem number 191. |
 |  6    | [P414](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P414)| Problem number 414. |
 |  7    | [P50](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P50)| Problem number 50. |
+|  8    | [P2](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P2)| Problem number 2. |
+|  9    | [P1342](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P1342)| Problem number 1342. |
+|  10    | [P67](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A05/P67)| Problem number 67. |
 
 
 
