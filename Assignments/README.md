@@ -17,6 +17,7 @@
 |  5    | [A09](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A09)| Assignment A09. |
 |  6    | [A10](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A10)| Assignment A10. |
 |  7    | [A11](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/A11)| Assignment A11. |
+|  8    | [A12](https://github.com/Sudhir0228/4883-Programming_Techniques_Ray/tree/main/Assignments/Leetcode/12-P01)| Presentation. |
 
 
 ##  Assignments Folder (Easy Breeze)
