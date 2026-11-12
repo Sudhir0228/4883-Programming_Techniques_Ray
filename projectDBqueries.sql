@@ -597,7 +597,7 @@ ORDER BY s.SupplierName, s.SupplierID;
 -- and show the top three distinct revenue ranks, including ties.
 -- Also show each variant's percentage of that month's revenue.
 --
--- Features: Multiple JOINs, CTEs, GROUP BY, DENSE_RANK OVER,
+-- Features: Multiple JOINs, GROUP BY, DENSE_RANK OVER,
 --           SUM OVER, nested filtering.
 -- ============================================================
 
