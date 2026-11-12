@@ -739,7 +739,6 @@ FETCH FIRST 5 ROWS ONLY;
 -- Business Goals:
 -- Supports Goal 3's return analysis and the return-cost
 -- components of Goals 1, 7, and 11.
--- This query does not calculate return rates or full profit.
 --
 -- Features:
 -- Multiple JOINs, GROUP BY, COUNT, SUM,
@@ -1853,8 +1852,7 @@ ORDER BY NetSales DESC, Brand;
 -- Based on sales in the same calendar month in previous years,
 -- how many units of each product variant might be needed?
 --
--- Business goal:
--- Goal 5: Seasonal Demand Forecasting Report.
+-- Business goal: 5
 --
 -- Features:
 -- Multiple JOINs, nested subqueries, GROUP BY, SUM, AVG,
