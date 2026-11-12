@@ -279,133 +279,152 @@ ORDER BY SalesMonth, Category;
 -- 19 rows selected.
 
 -- ============================================================
--- Query 3: Complete return-reason breakdown
+-- Query 3: Return rates and return-reason breakdown.
 --
 -- English question:
--- How are all return reasons distributed within each product
--- category and brand, and how many involve size or fit?
+-- What percentage of sold order lines were returned for each
+-- product variant, identified by product, brand, category,
+-- size, and color? What share of its returns had each reason?
 --
--- Business Goal: 3
+-- Business Goals: 2 and 3
 --
 -- Features:
--- Multiple JOINs, GROUP BY, HAVING, COUNT, SUM,
--- LIKE, CASE, OVER, calculated percentages, ORDER BY.
---
--- All recorded return reasons are included.
--- Missing reasons are displayed as 'Unspecified'.
---
--- SizeFitReturnCount counts returns whose reason contains
--- 'size' or 'fit'.
---
--- ReasonPct is the percentage of return records belonging
--- to each reason within the same category and brand.
+-- Multiple JOINs, subqueries, GROUP BY, HAVING,
+-- COUNT, SUM, LIKE, CASE, OVER, and ORDER BY.
 --
 -- ============================================================
-
 PROMPT
-PROMPT ===== QUERY 3: COMPLETE RETURN-REASON BREAKDOWN =====
+PROMPT ===== QUERY 3: RETURN RATES AND REASONS =====
 
+COLUMN ProductName FORMAT A28
+COLUMN Brand FORMAT A18
 COLUMN Category FORMAT A15
-COLUMN Brand FORMAT A20
-COLUMN ReturnReason FORMAT A25
-COLUMN ReturnCount FORMAT 999990
-COLUMN SizeFitReturnCount FORMAT 999990
+COLUMN VariantSize FORMAT A11
+COLUMN Color FORMAT A10
+COLUMN ReturnRatePct FORMAT 990.00
+COLUMN ReturnReason FORMAT A22
 COLUMN ReasonPct FORMAT 990.00
-COLUMN TotalRefund FORMAT 999999990.00
-COLUMN ReturnShipping FORMAT 9999990.00
+COLUMN SizeFitFlag FORMAT A11
 
 SELECT
-    p.Category,
+    pv.VariantID,
+    p.ProductName,
     p.Brand,
-    NVL(r.Reason, 'Unspecified') AS ReturnReason,
-    COUNT(r.ReturnNumber) AS ReturnCount,
-    SUM(
-        CASE
-            WHEN LOWER(r.Reason) LIKE '%size%'
-              OR LOWER(r.Reason) LIKE '%fit%'
-                THEN 1
-            ELSE 0
-        END
-    ) AS SizeFitReturnCount,
+    p.Category,
+    pv.VariantSize,
+    pv.Color,
     ROUND(
-        100 * COUNT(r.ReturnNumber)
-        / SUM(COUNT(r.ReturnNumber)) OVER (
-            PARTITION BY p.Category, p.Brand
+        100 * ReturnedLines / NULLIF(SoldLines, 0),
+        2
+    ) AS ReturnRatePct,
+    CASE
+        WHEN ReasonCount IS NULL THEN 'NO RETURNS'
+        ELSE RecordedReason
+    END AS ReturnReason,
+    ROUND(
+        100 * NVL(ReasonCount, 0)
+        / NULLIF(
+            SUM(NVL(ReasonCount, 0)) OVER (
+                PARTITION BY pv.VariantID
+            ),
+            0
         ),
         2
     ) AS ReasonPct,
-    ROUND(SUM(r.RefundAmount), 2) AS TotalRefund,
-    ROUND(SUM(r.ReturnShippingCost), 2) AS ReturnShipping
-FROM F26_S001_T5_RETURN r
-JOIN F26_S001_T5_ORDER_ITEM oi
-    ON oi.OrderNumber = r.OrderNumber
-   AND oi.LineItemNumber = r.LineItemNumber
-JOIN F26_S001_T5_PRODUCT_VARIANT pv
-    ON pv.VariantID = oi.VariantID
+    CASE
+        WHEN LOWER(RecordedReason) LIKE '%size%'
+          OR LOWER(RecordedReason) LIKE '%fit%'
+            THEN 'YES'
+        ELSE 'NO'
+    END AS SizeFitFlag
+FROM F26_S001_T5_PRODUCT_VARIANT pv
 JOIN F26_S001_T5_PRODUCT p
     ON p.ProductID = pv.ProductID
-GROUP BY
-    p.Category,
-    p.Brand,
-    NVL(r.Reason, 'Unspecified')
-HAVING COUNT(r.ReturnNumber) > 0
+JOIN (
+    SELECT
+        oi.VariantID AS SalesVariantID,
+        COUNT(*) AS SoldLines,
+        COUNT(r.ReturnNumber) AS ReturnedLines
+    FROM F26_S001_T5_ORDER_ITEM oi
+    LEFT JOIN F26_S001_T5_RETURN r
+        ON r.OrderNumber = oi.OrderNumber
+       AND r.LineItemNumber = oi.LineItemNumber
+    GROUP BY oi.VariantID
+    HAVING COUNT(*) > 0
+)
+    ON SalesVariantID = pv.VariantID
+LEFT JOIN (
+    SELECT
+        oi.VariantID AS ReasonVariantID,
+        NVL(r.Reason, 'Unspecified') AS RecordedReason,
+        COUNT(r.ReturnNumber) AS ReasonCount
+    FROM F26_S001_T5_RETURN r
+    JOIN F26_S001_T5_ORDER_ITEM oi
+        ON oi.OrderNumber = r.OrderNumber
+       AND oi.LineItemNumber = r.LineItemNumber
+    GROUP BY
+        oi.VariantID,
+        NVL(r.Reason, 'Unspecified')
+)
+    ON ReasonVariantID = pv.VariantID
 ORDER BY
     p.Category,
     p.Brand,
-    ReturnCount DESC,
+    p.ProductName,
+    pv.VariantID,
+    ReasonCount DESC,
     ReturnReason;
 
--- Expected output (verified in Oracle Omega):
---
--- Category    | Brand               | ReturnReason     | ReturnCount | SizeFitReturnCount | ReasonPct | TotalRefund | ReturnShipping
--- Accessories | Carhartt            | Item Damaged     | 1           | 0                  | 100.00    | 41.38       | 0.00
--- Accessories | Dockers             | Not As Described | 1           | 0                  | 100.00    | 78.47       | 4.99
--- Accessories | Fruit of the Loom   | Wrong Size       | 1           | 1                  | 100.00    | 14.59       | 4.99
--- Activewear  | Adidas              | Defective Item   | 1           | 0                  | 100.00    | 62.99       | 0.00
--- Activewear  | CRZ Yoga            | Arrived Late     | 1           | 0                  | 100.00    | 75.77       | 4.99
--- Activewear  | Columbia            | Wrong Color      | 1           | 0                  | 100.00    | 42.49       | 4.99
--- Activewear  | Hanes               | Wrong Color      | 1           | 0                  | 100.00    | 24.49       | 4.99
--- Activewear  | Nike                | Arrived Late     | 1           | 0                  | 50.00     | 51.49       | 4.99
--- Activewear  | Nike                | Wrong Size       | 1           | 1                  | 50.00     | 69.48       | 4.99
--- Activewear  | Under Armour        | Poor Quality     | 1           | 0                  | 100.00    | 60.48       | 4.99
--- Bottoms     | Amazon Essentials   | Poor Quality     | 1           | 0                  | 100.00    | 124.37      | 4.99
--- Bottoms     | CRZ Yoga            | Defective Item   | 1           | 0                  | 100.00    | 97.17       | 0.00
--- Bottoms     | Calvin Klein        | Changed Mind     | 1           | 0                  | 100.00    | 172.97      | 4.99
--- Bottoms     | Dockers             | Arrived Late     | 1           | 0                  | 100.00    | 87.48       | 4.99
--- Bottoms     | Levi's              | Poor Quality     | 1           | 0                  | 100.00    | 51.49       | 4.99
--- Bottoms     | The Drop            | Item Damaged     | 1           | 0                  | 50.00     | 82.78       | 0.00
--- Bottoms     | The Drop            | Not As Described | 1           | 0                  | 50.00     | 85.68       | 4.99
--- Bottoms     | Wrangler            | Wrong Size       | 1           | 1                  | 100.00    | 27.19       | 4.99
--- Dresses     | ANRABESS            | Wrong Color      | 1           | 0                  | 100.00    | 96.48       | 4.99
--- Dresses     | Amazon Essentials   | Not As Described | 1           | 0                  | 100.00    | 113.57      | 4.99
--- Dresses     | Calvin Klein        | Changed Mind     | 1           | 0                  | 100.00    | 78.49       | 4.99
--- Dresses     | Ever-Pretty         | Poor Quality     | 1           | 0                  | 100.00    | 213.47      | 4.99
--- Dresses     | Levi's              | Arrived Late     | 1           | 0                  | 100.00    | 60.49       | 4.99
--- Outerwear   | Alpha Industries    | Defective Item   | 1           | 0                  | 100.00    | 251.98      | 0.00
--- Outerwear   | Calvin Klein        | Changed Mind     | 1           | 0                  | 100.00    | 510.47      | 4.99
--- Outerwear   | Columbia            | Defective Item   | 1           | 0                  | 50.00     | 134.98      | 0.00
--- Outerwear   | Columbia            | Not As Described | 1           | 0                  | 50.00     | 177.48      | 4.99
--- Outerwear   | Levi's              | Item Damaged     | 1           | 0                  | 100.00    | 80.99       | 0.00
--- Outerwear   | The North Face      | Wrong Size       | 1           | 1                  | 100.00    | 483.47      | 4.99
--- Sleepwear   | Amazon Essentials   | Item Damaged     | 1           | 0                  | 100.00    | 105.27      | 0.00
--- Sleepwear   | Ekouaer             | Not As Described | 1           | 0                  | 100.00    | 27.19       | 4.99
--- Sleepwear   | Fruit of the Loom   | Poor Quality     | 1           | 0                  | 100.00    | 37.99       | 4.99
--- Sleepwear   | Hanes               | Changed Mind     | 1           | 0                  | 100.00    | 47.88       | 4.99
--- Sleepwear   | Lands' End          | Wrong Color      | 1           | 0                  | 100.00    | 97.37       | 4.99
--- Tops        | Amazon Essentials   | Wrong Color      | 1           | 0                  | 50.00     | 43.37       | 4.99
--- Tops        | Amazon Essentials   | Wrong Size       | 1           | 1                  | 50.00     | 33.48       | 4.99
--- Tops        | Champion            | Wrong Color      | 1           | 0                  | 100.00    | 47.88       | 4.99
--- Tops        | Goodthreads         | Changed Mind     | 1           | 0                  | 50.00     | 36.19       | 4.99
--- Tops        | Goodthreads         | Item Damaged     | 1           | 0                  | 50.00     | 94.47       | 0.00
--- Tops        | Hanes               | Item Damaged     | 1           | 0                  | 50.00     | 24.29       | 0.00
--- Tops        | Hanes               | Not As Described | 1           | 0                  | 50.00     | 33.49       | 4.99
--- Tops        | Lands' End          | Wrong Size       | 1           | 1                  | 100.00    | 294.47      | 4.99
--- Tops        | Under Armour        | Changed Mind     | 1           | 0                  | 100.00    | 78.48       | 4.99
--- Underwear   | Calvin Klein        | Arrived Late     | 1           | 0                  | 100.00    | 51.48       | 4.99
--- Underwear   | Hanes               | Defective Item   | 1           | 0                  | 100.00    | 67.47       | 0.00
+-- Expected output (verified in Oracle Omega, current database):
+-- VariantID | ProductName                  | Brand             | Category    | VariantSize | Color | ReturnRatePct | ReturnReason     | ReasonPct | SizeFitFlag
+-- 2034      | Winter Knit Beanie           | Carhartt          | Accessories | L           | Gray  | 100.00        | Item Damaged     | 100.00    | NO
+-- 2035      | Leather Casual Belt          | Dockers           | Accessories | XL          | Blue  | 100.00        | Not As Described | 100.00    | NO
+-- 2033      | Everyday Crew Socks          | Fruit of the Loom | Accessories | M           | Navy  | 100.00        | Wrong Size       | 100.00    | YES
+-- 2024      | Training Track Jacket        | Adidas            | Activewear  | L           | Gray  | 100.00        | Defective Item   | 100.00    | NO
+-- 2023      | Yoga Sports Bra              | CRZ Yoga          | Activewear  | M           | Navy  | 100.00        | Arrived Late     | 100.00    | NO
+-- 2045      | Thermal Base Layer Top       | Columbia          | Activewear  | XL          | Blue  | 100.00        | Wrong Color      | 100.00    | NO
+-- 2021      | Fleece Jogger Pants          | Hanes             | Activewear  | XS          | Black | 100.00        | Wrong Color      | 100.00    | NO
+-- 2039      | Athletic Running Leggings    | Nike              | Activewear  | 32          | Brown | 100.00        | Arrived Late     | 100.00    | NO
+-- 2025      | Workout Training Tee         | Nike              | Activewear  | XL          | Blue  | 100.00        | Wrong Size       | 100.00    | YES
+-- 2022      | Running Compression Shorts   | Under Armour      | Activewear  | S           | White | 100.00        | Poor Quality     | 100.00    | NO
+-- 2038      | Corduroy Trousers            | Amazon Essentials | Bottoms     | 30          | Beige | 100.00        | Poor Quality     | 100.00    | NO
+-- 2008      | High Rise Leggings           | CRZ Yoga          | Bottoms     | 30          | Beige | 100.00        | Defective Item   | 100.00    | NO
+-- 2044      | Faux Leather Skirt           | Calvin Klein      | Bottoms     | L           | Gray  | 100.00        | Changed Mind     | 100.00    | NO
+-- 2007      | Slim Fit Chinos              | Dockers           | Bottoms     | One Size    | Green | 100.00        | Arrived Late     | 100.00    | NO
+-- 2006      | Straight Leg Jeans           | Levi's            | Bottoms     | XXL         | Red   | 100.00        | Poor Quality     | 100.00    | NO
+-- 2010      | Pleated Midi Skirt           | The Drop          | Bottoms     | 34          | Pink  | 100.00        | Item Damaged     | 100.00    | NO
+-- 2043      | Wide Leg Palazzo Pants       | The Drop          | Bottoms     | M           | Navy  | 100.00        | Not As Described | 100.00    | NO
+-- 2009      | Cargo Shorts                 | Wrangler          | Bottoms     | 32          | Brown | 100.00        | Wrong Size       | 100.00    | YES
+-- 2013      | Knit Sweater Dress           | ANRABESS          | Dresses     | M           | Navy  | 100.00        | Wrong Color      | 100.00    | NO
+-- 2011      | Floral Summer Dress          | Amazon Essentials | Dresses     | XS          | Black | 100.00        | Not As Described | 100.00    | NO
+-- 2012      | Formal Wrap Dress            | Calvin Klein      | Dresses     | S           | White | 100.00        | Changed Mind     | 100.00    | NO
+-- 2014      | Maxi Evening Dress           | Ever-Pretty       | Dresses     | L           | Gray  | 100.00        | Poor Quality     | 100.00    | NO
+-- 2015      | Denim Shirt Dress            | Levi's            | Dresses     | XL          | Blue  | 100.00        | Arrived Late     | 100.00    | NO
+-- 2040      | Quilted Bomber Jacket        | Alpha Industries  | Outerwear   | 34          | Pink  | 100.00        | Defective Item   | 100.00    | NO
+-- 2020      | Wool Blend Overcoat          | Calvin Klein      | Outerwear   | 34          | Pink  | 100.00        | Changed Mind     | 100.00    | NO
+-- 2016      | Lightweight Windbreaker      | Columbia          | Outerwear   | XXL         | Red   | 100.00        | Defective Item   | 100.00    | NO
+-- 2019      | Waterproof Raincoat          | Columbia          | Outerwear   | 32          | Brown | 100.00        | Not As Described | 100.00    | NO
+-- 2018      | Classic Denim Jacket         | Levi's            | Outerwear   | 30          | Beige | 100.00        | Item Damaged     | 100.00    | NO
+-- 2017      | Puffer Winter Jacket         | The North Face    | Outerwear   | One Size    | Green | 100.00        | Wrong Size       | 100.00    | YES
+-- 2026      | Cotton Pajama Set            | Amazon Essentials | Sleepwear   | XXL         | Red   | 100.00        | Item Damaged     | 100.00    | NO
+-- 2027      | Satin Nightgown              | Ekouaer           | Sleepwear   | One Size    | Green | 100.00        | Not As Described | 100.00    | NO
+-- 2030      | Thermal Sleep Set            | Fruit of the Loom | Sleepwear   | 34          | Pink  | 100.00        | Poor Quality     | 100.00    | NO
+-- 2028      | Fleece Lounge Pants          | Hanes             | Sleepwear   | 30          | Beige | 100.00        | Changed Mind     | 100.00    | NO
+-- 2029      | Flannel Pajama Shirt         | Lands' End        | Sleepwear   | 32          | Brown | 100.00        | Wrong Color      | 100.00    | NO
+-- 2001      | Classic Cotton T-Shirt       | Amazon Essentials | Tops        | XS          | Black | 100.00        | Wrong Size       | 100.00    | YES
+-- 2005      | Ribbed Tank Top              | Amazon Essentials | Tops        | XL          | Blue  | 100.00        | Wrong Color      | 100.00    | NO
+-- 2037      | Oversized Graphic Tee        | Champion          | Tops        | One Size    | Green | 100.00        | Wrong Color      | 100.00    | NO
+-- 2036      | Linen Button-Up Shirt        | Goodthreads       | Tops        | XXL         | Red   | 100.00        | Changed Mind     | 100.00    | NO
+-- 2002      | Slim Fit Oxford Shirt        | Goodthreads       | Tops        | S           | White | 100.00        | Item Damaged     | 100.00    | NO
+-- 2042      | Cotton Henley Shirt          | Hanes             | Tops        | S           | White | 100.00        | Item Damaged     | 100.00    | NO
+-- 2003      | Relaxed Fit Hoodie           | Hanes             | Tops        | M           | Navy  | 100.00        | Not As Described | 100.00    | NO
+-- 2041      | Cashmere Blend Sweater       | Lands' End        | Tops        | XS          | Black | 100.00        | Wrong Size       | 100.00    | YES
+-- 2004      | Performance Polo Shirt       | Under Armour      | Tops        | L           | Gray  | 100.00        | Changed Mind     | 100.00    | NO
+-- 2031      | Cotton Boxer Briefs          | Calvin Klein      | Underwear   | XS          | Black | 100.00        | Arrived Late     | 100.00    | NO
+-- 2032      | Seamless Briefs              | Hanes             | Underwear   | S           | White | 100.00        | Defective Item   | 100.00    | NO
 --
 -- 45 rows selected.
-
+--
 -- ============================================================
 -- Query 4: Monthly category sales with subtotals.
 --
@@ -416,7 +435,6 @@ ORDER BY
 --
 -- Features: Multiple JOINs, ROLLUP, GROUPING, CASE, aggregates.
 -- ============================================================
-
 PROMPT
 PROMPT ===== QUERY 4: MONTHLY CATEGORY SALES ROLLUP =====
 
