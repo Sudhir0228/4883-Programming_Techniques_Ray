@@ -9,7 +9,7 @@ SET NULL 'NULL'
 -- ============================================================
 -- Query 1: Complete inventory alert report
 --
--- Business question:
+-- English question:
 -- Which variants are out of stock, at or below their reorder
 -- threshold, or at risk of stockout because their inventory
 -- cover is no greater than their supplier's standard lead time?
@@ -100,7 +100,7 @@ ORDER BY AvailableStock, VariantID;
 -- ============================================================
 -- Query 2: Monthly profitability by product category
 --
--- Business question:
+-- English question:
 -- Which product categories are profitable each month after
 -- wholesale costs, Amazon fees, outbound shipping,
 -- customer refunds, and return-shipping costs?
@@ -111,49 +111,6 @@ ORDER BY AvailableStock, VariantID;
 -- Multiple JOINs, subqueries, GROUP BY, HAVING,
 -- SUM, COUNT, CASE, OVER, calculated columns, ORDER BY.
 --
--- Cost calculation:
--- Wholesale cost uses the weighted-average unit cost from
--- Received purchase orders, net of purchase-line discounts.
--- Purchase discounts are total monetary amounts per line.
--- This all-history average is a reporting estimate, not a
--- historical inventory-valuation ledger.
---
--- Order fees and outbound shipping are allocated to lines
--- according to their proportion of the order's net sales.
--- Zero-value orders use quantity share instead.
--- Stored SubscriptionCost is assumed already correctly
--- allocated to each order from the monthly subscription fee.
---
--- Return treatment:
--- RefundAmount is assumed to be the actual refund after
--- deducting any restocking fee. The fee is not deducted again.
--- Returns are attributed to the original sale month, even
--- when processed later.
--- Returned-inventory recovery value is not recorded.
---
--- Profit scope:
--- EstimatedNetContribution is after the listed direct costs,
--- but before shared operating expenses and employee salaries.
--- Those expenses are included separately in the monthly P&L.
---
--- Data limitation:
--- Some sold variants have no acquisition-cost records from
--- Received purchase orders. This may represent opening
--- inventory whose purchase-cost history was not imported.
---
--- Pending and Shipped purchase orders remain valid records,
--- but are excluded from the completed-purchase cost average.
--- A pending replenishment order does not cause missing cost
--- if an earlier Received purchase provides a known cost.
---
--- If any sold line lacks a known wholesale cost, the group's
--- WholesaleCost and EstimatedNetContribution are shown as NULL.
--- Missing order fees or shipping also prevent a complete
--- contribution calculation.
--- MissingCostLines counts lines with any required cost missing.
--- Unknown costs are not treated as zero.
---
--- All categories with sales are included.
 -- ============================================================
 
 PROMPT
@@ -324,7 +281,7 @@ ORDER BY SalesMonth, Category;
 -- ============================================================
 -- Query 3: Complete return-reason breakdown
 --
--- Business question:
+-- English question:
 -- How are all return reasons distributed within each product
 -- category and brand, and how many involve size or fit?
 --
@@ -338,11 +295,10 @@ ORDER BY SalesMonth, Category;
 -- Missing reasons are displayed as 'Unspecified'.
 --
 -- SizeFitReturnCount counts returns whose reason contains
--- 'size' or 'fit', ignoring letter case.
+-- 'size' or 'fit'.
 --
 -- ReasonPct is the percentage of return records belonging
 -- to each reason within the same category and brand.
--- It is NOT the percentage of sales returned.
 --
 -- ============================================================
 
@@ -453,7 +409,7 @@ ORDER BY
 -- ============================================================
 -- Query 4: Monthly category sales with subtotals.
 --
--- English:
+-- English question:
 -- Show net sales revenue and units sold for each month and
 -- product category, followed by each month's subtotal and
 -- an overall grand total.
@@ -537,7 +493,7 @@ ORDER BY
 -- ============================================================
 -- Query 5: Supplier purchase-history coverage.
 --
--- English:
+-- English question:
 -- Find suppliers for whom every product variant assigned to
 -- that supplier has appeared in at least one received purchase
 -- order issued to that same supplier.
@@ -615,7 +571,9 @@ ORDER BY s.SupplierName, s.SupplierID;
 -- ============================================================
 -- Query 6: Top three revenue ranks of variants each month.
 --
--- English:
+-- Business Goal: 6
+--
+-- English question:
 -- Calculate each product variant's monthly units sold and
 -- net revenue. Rank variants within each month by net revenue
 -- and show the top three distinct revenue ranks, including ties.
@@ -773,7 +731,7 @@ FETCH FIRST 5 ROWS ONLY;
 -- ============================================================
 -- Query 8: Return cost analysis by category and brand
 --
--- Business question:
+-- English question:
 -- Which ten category and brand groups have the highest
 -- return-related costs? Show return counts, total refunds,
 -- return-shipping costs, and restocking fees.
@@ -786,23 +744,6 @@ FETCH FIRST 5 ROWS ONLY;
 -- Features:
 -- Multiple JOINs, GROUP BY, COUNT, SUM,
 -- calculated column, ORDER BY, FETCH FIRST.
---
--- Refund assumption:
--- RefundAmount is the actual amount refunded to the customer
--- AFTER deducting any restocking fee.
---
--- Example:
--- Original sale = 35.98
--- RestockingFee = 2.50
--- RefundAmount = 33.48
--- ReturnShippingCost = 4.99
--- NetReturnCost = 33.48 + 4.99 = 38.47
---
--- Net return cost = RefundAmount + ReturnShippingCost.
--- RestockingFee is displayed separately for reference.
--- It must NOT be subtracted again.
---
--- ReturnCount counts returned order lines, not returned units.
 -- ============================================================
 
 PROMPT
@@ -863,7 +804,7 @@ FETCH FIRST 10 ROWS ONLY;
 -- ============================================================
 -- Query 9: Supplier performance summary
 --
--- Business question:
+-- English question:
 -- How do suppliers compare on delivery reliability, actual
 -- lead time, purchase history, customer-return rates,
 -- Net 30 status, and credit limits?
@@ -873,36 +814,6 @@ FETCH FIRST 10 ROWS ONLY;
 -- Features:
 -- Multiple JOINs, aggregated subqueries, GROUP BY,
 -- COUNT, SUM, AVG, CASE, calculated percentages, ORDER BY.
---
--- Column meanings:
--- ReceivedOrders: number of completed purchase orders.
--- OnTimePct: percentage of assessable Received orders
--- delivered by their estimated delivery date.
--- AvgLeadDays: average days from order placement to receipt.
--- PurchaseHistory: total ordered value across all statuses.
--- ReceivedValue: value of completed purchase orders.
--- ReturnRatePct: returned sales lines / sold sales lines * 100.
---
--- Pending and Shipped purchase orders remain valid records.
--- Their values are included in PurchaseHistory, but they
--- are excluded from completed-delivery measurements.
---
--- NULL delivery measures mean there are no assessable
--- completed observations for the corresponding calculation.
--- NULL return rate means there are no recorded sold lines.
---
--- Return rates measure returned order lines, not units.
--- Returns are attributed to each variant's current primary
--- supplier, not traced to individual purchase-order lots.
--- This association does not prove supplier fault.
---
--- Purchase and return data are aggregated separately
--- before joining to prevent multiplication of totals.
---
--- Sample-data limitation:
--- Each supplier currently has one purchase order and one
--- sold line with a return. This produces 100 percent return
--- rates and provides limited evidence for supplier comparison.
 -- ============================================================
 
 PROMPT
@@ -999,7 +910,6 @@ ORDER BY
     s.SupplierName;
 
 -- Expected output (verified in Oracle Omega):
---
 -- SupplierID | SupplierName                   | Net30Status | CreditLimit | ReceivedOrders | OnTimePct | AvgLeadDays | PurchaseHistory | ReceivedValue | ReturnRatePct
 -- 36         | Brightline Textile Group       | Inactive    | 40000.00    | 1              | 100.00    | 8.00        | 400.00          | 400.00        | 100.00
 -- 3          | Evergreen Fabric Distributors  | Active      | 25000.00    | 1              | 100.00    | 8.00        | 612.50          | 612.50        | 100.00
@@ -1148,25 +1058,6 @@ ORDER BY
 -- Features:
 -- Multiple JOINs, subqueries, GROUP BY,
 -- SUM, COUNT, CASE, OVER, calculated columns, ORDER BY.
---
--- Missing-cost limitation:
--- Some sold variants lack Received purchase-cost records.
--- This may represent opening inventory whose acquisition
--- costs were not imported.
--- A pending replenishment order does not cause missing cost
--- if an earlier Received purchase provides a known cost.
---
--- Unknown costs are not treated as zero.
--- MissingCostLines counts sales lines missing any required
--- wholesale cost, Amazon fee, or outbound shipping cost.
--- Contribution is NULL if any required cost is missing.
---
--- Sample-data limitation:
--- Every sold line currently has a return record.
--- Negative contribution is therefore expected for variants
--- with complete costs under the stated calculation.
---
--- All sold variants are included, not only the top ten.
 -- ============================================================
 
 PROMPT
@@ -1314,7 +1205,6 @@ ORDER BY
     VariantID;
 
 -- Expected output (verified in Oracle Omega):
---
 -- VariantID | ProductName                  | VariantSize | Color | UnitsSold | NetSales | WholesaleCost | AmazonFees | ShippingCost | ReturnCost | MissingCostLines | EstimatedNetContribution
 -- 2036      | Linen Button-Up Shirt        | XXL         | Red   | 1         | 38.69    | 10.00         | 6.79       | 4.99         | 41.18      | 0                | -24.27
 -- 2012      | Formal Wrap Dress            | S           | White | 1         | 80.99    | 10.00         | 13.14      | 4.99         | 83.48      | 0                | -30.62
@@ -1603,12 +1493,6 @@ ORDER BY ReportMonth;
 -- Multiple JOINs, subqueries, GROUP BY, GROUPING SETS,
 -- GROUPING, CASE, SUM, COUNT, calculated percentages,
 -- ORDER BY.
---
--- Sample-data limitation:
--- The current sample has one order per purchasing customer
--- and one distinct variant per order. Zero repeat customers
--- and zero multiple-variant orders are therefore expected.
--- These figures describe recorded data, not unrecorded history.
 -- ============================================================
 
 PROMPT
@@ -1720,7 +1604,6 @@ ORDER BY
     CustomerID;
 
 -- Expected output (verified in Oracle Omega):
---
 -- ReportLevel | CustomerID | Fname     | Lname     | PurchasingCustomers | TotalOrders | AverageOrderValue | SingleVariantOrders | MultiVariantOrders | SingleVariantOrderPct | MultiVariantOrderPct | RepeatCustomers | RepeatCustomerPct
 -- ALL BUYERS  | NULL       | NULL      | NULL      | 45                  | 45          | 103.52            | 45                  | 0                  | 100.00                | 0.00                 | 0               | 0.00
 -- CUSTOMER    | 5001       | James     | Miller    | 1                   | 1           | 35.98             | 1                   | 0                  | 100.00                | 0.00                 | 0               | 0.00
@@ -1783,22 +1666,6 @@ ORDER BY
 -- Features:
 -- Multiple JOINs, subqueries, GROUP BY,
 -- SUM, COUNT, CASE, OVER, calculated columns, ORDER BY.
---
--- Missing-cost limitation:
--- Some sold variants lack Received purchase-cost records.
--- This may represent opening inventory whose acquisition
--- costs were not imported.
--- Unknown costs are not treated as zero.
--- If any required cost is missing, the brand's estimated
--- contribution and margin are shown as NULL.
--- MissingCostLines identifies the number of affected lines.
---
--- Sample-data limitation:
--- Every recorded sold line currently has a return.
--- Return rates of 100 percent and negative contributions
--- are therefore expected under these assumptions.
--- ReturnCost may exceed NetSales because it includes
--- return shipping in addition to actual refunds.
 -- ============================================================
 
 PROMPT
@@ -1953,7 +1820,6 @@ GROUP BY Brand
 ORDER BY NetSales DESC, Brand;
 
 -- Expected output (verified in Oracle Omega):
---
 -- Brand              | UnitsSold | NetSales | WholesaleCost | AmazonFees | ShippingCost | ReturnCost | LineReturnRatePct | MissingCostLines | EstimatedNetContribution | ContributionMarginPct
 -- Calvin Klein       | 9         | 823.41   | NULL          | 127.48     | 25.96        | 833.37     | 100.00            | 2                | NULL                     | NULL
 -- The North Face     | 3         | 485.97   | 67.50         | 73.89      | 6.99         | 488.46     | 100.00            | 0                | -150.87                  | -31.05
@@ -1993,39 +1859,7 @@ ORDER BY NetSales DESC, Brand;
 -- Features:
 -- Multiple JOINs, nested subqueries, GROUP BY, SUM, AVG,
 -- COUNT, CASE, date functions, and ORDER BY.
---
--- Assumptions and limitations:
--- 1. The forecast covers the 12 months immediately following
---    the latest recorded order month, not the current date.
---
--- 2. ForecastUnits is the average quantity sold in the same
---    calendar month across available earlier years.
---    No growth or trend adjustment is applied.
---
--- 3. Historical months included in the calculation are assumed
---    to contain complete sales data.
---
--- 4. Variant/month combinations without comparable historical
---    sales are omitted. Missing history does not mean zero demand.
---    Months without recorded sales are not included as zeroes
---    in the historical average.
---
--- 5. PriorYearsUsed counts the earlier years contributing an
---    observed sales total for that variant and calendar month.
---
--- 6. The current sample provides only a ONE-YEAR BASELINE.
---    This demonstrates the forecasting calculation, but does
---    not establish a reliable recurring seasonal pattern.
---
--- 7. The calculation uses gross units ordered. Returns are not
---    deducted, and unmet demand during stockouts is unknown.
 -- ============================================================
-
-SET TAB OFF
-SET SQLBLANKLINES ON
-SET LINESIZE 220
-SET PAGESIZE 100
-
 PROMPT
 PROMPT ===== QUERY 15: COMPARABLE-MONTH DEMAND FORECAST =====
 
@@ -2100,7 +1934,6 @@ WHERE PriorYearsUsed > 0
 ORDER BY TargetMonth, VariantID;
 
 -- Expected output (verified in Oracle Omega, current database):
---
 -- VariantID | ProductName                    | ForecastMonth | PriorYearsUsed | ForecastUnits | DataStatus
 -- 2001      | Classic Cotton T-Shirt         | 2027-03       | 1              | 2.00          | ONE-YEAR BASELINE
 -- 2002      | Slim Fit Oxford Shirt          | 2027-03       | 1              | 3.00          | ONE-YEAR BASELINE
